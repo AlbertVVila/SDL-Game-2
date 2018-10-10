@@ -21,7 +21,10 @@ ModuleSceneKen::ModuleSceneKen(bool start_enabled) : Module(start_enabled)
 
 	// TODO 2 : setup the foreground (red ship) with
 	// coordinates x,y,w,h from ken_stage.png
-
+	foreground.x = 8;
+	foreground.y = 24;
+	foreground.w = 522;
+	foreground.h = 181;
 	// Background / sky
 	background.x = 72;
 	background.y = 208;
@@ -32,9 +35,14 @@ ModuleSceneKen::ModuleSceneKen(bool start_enabled) : Module(start_enabled)
 	flag.frames.push_back({848, 208, 40, 40});
 	flag.frames.push_back({848, 256, 40, 40});
 	flag.frames.push_back({848, 304, 40, 40});
-	flag.speed = 0.08f;
+	flag.speed = 0.1f;
 
 	// TODO 4: Setup Girl Animation from coordinates from ken_stage.png
+	girl.frames.push_back({624,16,32,54});
+	girl.frames.push_back({624,80,32,54});
+	girl.frames.push_back({624,144,32,54});
+	girl.speed = .1f;
+	
 
 }
 
@@ -72,8 +80,10 @@ update_status ModuleSceneKen::Update()
 
 	// Draw everything --------------------------------------
 	// TODO 1: Tweak the movement speed of the sea&sky + flag to your taste
-	App->renderer->Blit(graphics, 0, 0, &background, 1.0f); // sea and sky
-	App->renderer->Blit(graphics, 560, 8, &(flag.GetCurrentFrame()), 1.0f); // flag animation
+	App->renderer->Blit(graphics, 0, 0, &background, .9f); // sea and sky
+	App->renderer->Blit(graphics, 0, -5, &foreground, .9f); // red ship
+	App->renderer->Blit(graphics, 191, 99, &(girl.GetCurrentFrame()), .9f); //girl in red ship
+	App->renderer->Blit(graphics, 560, 8, &(flag.GetCurrentFrame()), .9f); // flag animation
 
 	// TODO 3: Draw the ship. Be sure to tweak the speed.
 
