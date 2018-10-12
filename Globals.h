@@ -34,6 +34,8 @@ enum update_status
 		 }\
 	 }
 
+#define MAX(x,y) ((x>y)?x:y)
+
 // Configuration -----------
 #define SCREEN_WIDTH 384
 #define SCREEN_HEIGHT 224

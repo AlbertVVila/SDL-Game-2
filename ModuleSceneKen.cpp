@@ -8,6 +8,10 @@
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
 #include "SDL/include/SDL.h"
+#include "math.h"
+
+#define SHIP_MOVEMENT_TIME 5000
+#define SHIP_MOVEMENT_AMOUNT 6
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 
@@ -58,7 +62,9 @@ bool ModuleSceneKen::Start()
 
 	// TODO 7: Enable the player module
 	// TODO 0: trigger background music
-	
+	App->audio->PlayMusic("ken.ogg",9.0f);
+	last_time = SDL_GetTicks();
+
 	return true;
 }
 
@@ -76,19 +82,19 @@ bool ModuleSceneKen::CleanUp()
 // Update: draw background
 update_status ModuleSceneKen::Update()
 {
+	UpdateTime();
 	// TODO 5: make sure the ship goes up and down
-
+	int shipOffsetY = ComputeShipMovement();
 	// Draw everything --------------------------------------
 	// TODO 1: Tweak the movement speed of the sea&sky + flag to your taste
 	App->renderer->Blit(graphics, 0, 0, &background, .9f); // sea and sky
-	App->renderer->Blit(graphics, 0, -5, &foreground, .9f); // red ship
-	App->renderer->Blit(graphics, 191, 99, &(girl.GetCurrentFrame()), .9f); //girl in red ship
 	App->renderer->Blit(graphics, 560, 8, &(flag.GetCurrentFrame()), .9f); // flag animation
 
 	// TODO 3: Draw the ship. Be sure to tweak the speed.
-
+	App->renderer->Blit(graphics, 0, -5+shipOffsetY, &foreground, .9f); // red ship
 	// TODO 6: Draw the girl. Make sure it follows the ship movement!
-	
+	App->renderer->Blit(graphics, 191, 99+shipOffsetY, &(girl.GetCurrentFrame()), .9f); //girl in red ship
+
 	App->renderer->Blit(graphics, 0, 170, &ground);
 
 	// TODO 10: Build an entire new scene "honda", you can find its
@@ -98,4 +104,25 @@ update_status ModuleSceneKen::Update()
 	// using FadeToBlack module
 
 	return UPDATE_CONTINUE;
+}
+
+int ModuleSceneKen::ComputeShipMovement()
+{
+	if (shiptimer <= 0)
+	{
+		direction = -direction;
+		shiptimer = SHIP_MOVEMENT_TIME;
+	}
+
+	shiptimer -= delta_time;
+	float percentage = direction == 1 ? shiptimer : SHIP_MOVEMENT_TIME-shiptimer;
+	return round(percentage /SHIP_MOVEMENT_TIME*SHIP_MOVEMENT_AMOUNT);
+
+}
+
+void ModuleSceneKen::UpdateTime()
+{
+	unsigned int current_time = SDL_GetTicks();
+	delta_time = current_time - last_time;
+	last_time = current_time;
 }

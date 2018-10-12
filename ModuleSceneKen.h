@@ -26,6 +26,16 @@ public:
 
 	Animation flag;
 	Animation girl;
+
+private:
+	int ComputeShipMovement();
+	void UpdateTime();
+
+private:
+	int direction = 1;
+	int shiptimer = 0;
+	int last_time;
+	int delta_time = 0;
 };
 
 #endif // __MODULESCENEKEN_H__
