@@ -12,7 +12,7 @@
 
 #define SHIP_MOVEMENT_TIME 5000
 #define SHIP_MOVEMENT_AMOUNT 6
-
+#define PARALAX_SPEED 0.9f
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 
 ModuleSceneKen::ModuleSceneKen(bool start_enabled) : Module(start_enabled)
@@ -61,8 +61,10 @@ bool ModuleSceneKen::Start()
 	graphics = App->textures->Load("ken_stage.png");
 
 	// TODO 7: Enable the player module
+	App->player->Enable();
 	// TODO 0: trigger background music
 	App->audio->PlayMusic("ken.ogg",9.0f);
+
 	last_time = SDL_GetTicks();
 
 	return true;
@@ -87,13 +89,13 @@ update_status ModuleSceneKen::Update()
 	int shipOffsetY = ComputeShipMovement();
 	// Draw everything --------------------------------------
 	// TODO 1: Tweak the movement speed of the sea&sky + flag to your taste
-	App->renderer->Blit(graphics, 0, 0, &background, .9f); // sea and sky
-	App->renderer->Blit(graphics, 560, 8, &(flag.GetCurrentFrame()), .9f); // flag animation
+	App->renderer->Blit(graphics, 0, 0, &background, PARALAX_SPEED); // sea and sky
+	App->renderer->Blit(graphics, 560, 8, &(flag.GetCurrentFrame()), PARALAX_SPEED); // flag animation
 
 	// TODO 3: Draw the ship. Be sure to tweak the speed.
-	App->renderer->Blit(graphics, 0, -5+shipOffsetY, &foreground, .9f); // red ship
+	App->renderer->Blit(graphics, 0, -5+shipOffsetY, &foreground, PARALAX_SPEED); // red ship
 	// TODO 6: Draw the girl. Make sure it follows the ship movement!
-	App->renderer->Blit(graphics, 191, 99+shipOffsetY, &(girl.GetCurrentFrame()), .9f); //girl in red ship
+	App->renderer->Blit(graphics, 191, 99+shipOffsetY, &(girl.GetCurrentFrame()), PARALAX_SPEED); //girl in red ship
 
 	App->renderer->Blit(graphics, 0, 170, &ground);
 
