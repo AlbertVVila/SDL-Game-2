@@ -43,5 +43,6 @@ enum update_status
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Awesome Game"
+#define PARALAX_SPEED 0.9f
 
 #endif //__GLOBALS_H__

@@ -12,7 +12,7 @@
 
 #define SHIP_MOVEMENT_TIME 5000
 #define SHIP_MOVEMENT_AMOUNT 6
-#define PARALAX_SPEED 0.9f
+
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 
 ModuleSceneKen::ModuleSceneKen(bool start_enabled) : Module(start_enabled)
