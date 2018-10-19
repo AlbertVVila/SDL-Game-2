@@ -104,6 +104,7 @@ update_status ModuleSceneKen::Update()
 
 	// TODO 11: Make that pressing space triggers a switch to honda logic module
 	// using FadeToBlack module
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) ChangeScene();
 
 	return UPDATE_CONTINUE;
 }
@@ -127,4 +128,9 @@ void ModuleSceneKen::UpdateTime()
 	unsigned int current_time = SDL_GetTicks();
 	delta_time = current_time - last_time;
 	last_time = current_time;
+}
+
+void ModuleSceneKen::ChangeScene()
+{
+	App->fade->FadeToBlack((Module *)App->scene_honda,this, 3.0f);
 }

@@ -48,7 +48,7 @@ bool Application::Init()
 	}
 
 	// Start the first scene --
-	fade->FadeToBlack(scene_honda, nullptr, 3.0f);
+	fade->FadeToBlack(scene_ken, nullptr, 3.0f);
 
 	return ret;
 }

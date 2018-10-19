@@ -30,6 +30,7 @@ public:
 private:
 	int ComputeShipMovement();
 	void UpdateTime();
+	void ChangeScene();
 
 private:
 	int direction = 1;
