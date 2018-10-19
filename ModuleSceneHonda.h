@@ -24,7 +24,9 @@ public:
 	SDL_Rect bath;
 	SDL_Rect background;
 	SDL_Rect foreground;
-
+	SDL_Rect ceilling;
+	SDL_Rect bucket;
+	
 	Animation flag;
 	Animation girl;
 

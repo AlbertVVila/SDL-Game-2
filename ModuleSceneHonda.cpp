@@ -34,6 +34,15 @@ ModuleSceneHonda::ModuleSceneHonda(bool start_enabled) : Module(start_enabled)
 	background.w = 671;
 	background.h = 199;
 
+	ceilling.x = 91;
+	ceilling.y = 8;
+	ceilling.w = 765;
+	ceilling.h = 48;
+
+	bucket.x = 542;
+	bucket.y = 85;
+	bucket.w = 32;
+	bucket.h = 26;
 
 
 }
@@ -71,15 +80,14 @@ bool ModuleSceneHonda::CleanUp()
 update_status ModuleSceneHonda::Update()
 {
 
+	App->renderer->Blit(graphics, -50, -15, &background, PARALAX_SPEED);
+	App->renderer->Blit(graphics, -100, -15, &ceilling, PARALAX_SPEED);
 
-	//App->renderer->Blit(graphics, 0, 0, &background, PARALAX_SPEED); 
-	//App->renderer->Blit(graphics, 560, 8, &(flag.GetCurrentFrame()), PARALAX_SPEED); 
 
+	App->renderer->Blit(graphics, -150, 160, &ground);
+	App->renderer->Blit(graphics, 100, 130, &bath, PARALAX_SPEED);
+	App->renderer->Blit(graphics, 30, 155, &bucket, PARALAX_SPEED);
 
-	App->renderer->Blit(graphics, 100, -15, &background, PARALAX_SPEED);
-
-	App->renderer->Blit(graphics, 0, 160, &ground);
-	App->renderer->Blit(graphics, 250, 130, &bath, PARALAX_SPEED);
 
 
 	return UPDATE_CONTINUE;
