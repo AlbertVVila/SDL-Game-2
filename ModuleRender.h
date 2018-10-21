@@ -19,6 +19,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+	void ResetCamera();
 
 	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f);
 

@@ -45,6 +45,6 @@ enum update_status
 #define VSYNC true
 #define TITLE "Super Awesome Game"
 #define PARALAX_SPEED 0.9f
-#define KEN_STAGE_LIMIT 750
+#define STAGE_LIMIT 600
 
 #endif //__GLOBALS_H__

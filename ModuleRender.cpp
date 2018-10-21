@@ -87,6 +87,12 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
+void ModuleRender::ResetCamera()
+{
+	camera.x = 0;
+	camera.y = 0;
+}
+
 // Blit to screen
 bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed)
 {

@@ -93,6 +93,11 @@ bool ModulePlayer::CleanUp()
 	return true;
 }
 
+void ModulePlayer::ResetPlayer()
+{
+	hadouken_ball = false;
+}
+
 
 // Update
 update_status ModulePlayer::Update()
@@ -179,7 +184,7 @@ void ModulePlayer::ExecuteState()
 		break;
 	case MOVING_FORWARD:
 		current_animation = &forward;
-		App->renderer->camera.x = MAX(App->renderer->camera.x - RYU_SPEED, -KEN_STAGE_LIMIT);
+		App->renderer->camera.x = MAX(App->renderer->camera.x - RYU_SPEED, -STAGE_LIMIT);
 		break;
 	case MOVING_BACKWARD:
 		current_animation = &backward;

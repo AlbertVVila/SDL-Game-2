@@ -61,6 +61,8 @@ bool ModuleSceneHonda::Start()
 	App->player->Enable();
 	// TODO 0: trigger background music
 	App->audio->PlayMusic("honda.ogg", 5.0f);
+	App->player->ResetPlayer();
+	App->renderer->ResetCamera();
 
 	return true;
 }
