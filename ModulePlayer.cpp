@@ -8,6 +8,7 @@
 #include <assert.h>
 
 #define RYU_SPEED 2
+#define HADOUKEN_SPEED 5
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
@@ -51,6 +52,19 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	punch.frames.push_back({ 431, 268, 108, 94 });
 	punch.frames.push_back({ 332, 268, 88, 94 });
 	punch.speed = 0.15f;
+
+	hadouken.frames.push_back({ 27, 1545, 88, 89 });
+	hadouken.frames.push_back({ 124, 1545, 95, 89 });
+	hadouken.frames.push_back({ 239, 1545, 94, 89 });
+	hadouken.frames.push_back({ 357, 1545, 106, 89 });
+	hadouken.frames.push_back({ 124, 1545, 95, 89 });
+	hadouken.speed = 0.15f;
+
+	hadouken_effect.frames.push_back({ 480, 1563, 55, 31 });
+	hadouken_effect.frames.push_back({ 510, 1600, 55, 31 });
+	hadouken_effect.frames.push_back({ 550, 1563, 55, 31 });
+	//hadouken_effect.frames.push_back({ 510, 1600, 55, 31 });
+	hadouken_effect.speed = 0.2f;
 
 }
 
@@ -103,6 +117,10 @@ void ModulePlayer::UpdateFSM()
 		{
 			currentState = PUNCH;
 		}
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+		{
+			currentState = HADOUKEN;
+		}
 		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		{
 			currentState = MOVING_BACKWARD;
@@ -140,6 +158,13 @@ void ModulePlayer::UpdateFSM()
 			currentState = IDLE;
 		}
 		break;
+	case HADOUKEN:
+		if (hadouken.IsLastFrame())
+		{
+			currentState = IDLE;
+			ActivateHadouken();
+		}
+		break;
 	}
 	ExecuteState();
 }
@@ -166,7 +191,24 @@ void ModulePlayer::ExecuteState()
 	case PUNCH:
 		current_animation = &punch;
 		break;
+	case HADOUKEN:
+		current_animation = &hadouken;
+		break;
 	}
+
+	if (hadouken_ball)
+	{
+		App->renderer->Blit(graphics, 150+hadouken_ball_position++, 130, &hadouken_effect.GetCurrentFrame(), 1);
+		if (hadouken_ball_position > 1000)
+			hadouken_ball = false;
+	}
+
 	assert(current_animation!=nullptr);
 	App->renderer->Blit(graphics, 60, 110, &current_animation->GetCurrentFrame(), 0);
+}
+
+void ModulePlayer::ActivateHadouken()
+{
+	hadouken_ball_position = -App->renderer->camera.x/SCREEN_SIZE;
+	hadouken_ball = true;
 }

@@ -15,6 +15,7 @@ enum PlayerState
 	MOVING_BACKWARD,
 	PUNCH,
 	KICK,
+	HADOUKEN
 };
 
 class ModulePlayer : public Module
@@ -30,11 +31,19 @@ public:
 public:
 
 	SDL_Texture* graphics = nullptr;
+
+	//Player animations
 	Animation idle;
 	Animation backward;
 	Animation forward;
 	Animation kick;
 	Animation punch;
+	Animation hadouken;
+
+	//Player effect animations
+	Animation hadouken_effect;
+	float hadouken_ball_position = 0;
+	bool hadouken_ball = false;
 
 	iPoint position;
 	PlayerState currentState = IDLE;
@@ -42,6 +51,7 @@ public:
 private:
 	void UpdateFSM();
 	void ExecuteState();
+	void ActivateHadouken();
 };
 
 #endif // __MODULEPLAYER_H__
