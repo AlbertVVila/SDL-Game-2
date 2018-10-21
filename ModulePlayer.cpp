@@ -129,7 +129,7 @@ void ModulePlayer::UpdateFSM()
 		{
 			currentState = PUNCH;
 		}
-		else if (App->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+		else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
 		{
 			currentState = JUMP_PUNCH;
 		}
