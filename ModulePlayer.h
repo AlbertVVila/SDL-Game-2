@@ -15,7 +15,8 @@ enum PlayerState
 	MOVING_BACKWARD,
 	PUNCH,
 	KICK,
-	HADOUKEN
+	JUMP_PUNCH,
+	HADOUKEN,
 };
 
 class ModulePlayer : public Module
@@ -40,11 +41,15 @@ public:
 	Animation kick;
 	Animation punch;
 	Animation hadouken;
+	Animation jump_punch;
 
 	//Player effect animations
 	Animation hadouken_effect;
-	float hadouken_ball_position = 0;
+	int hadouken_ball_position = 0;
 	bool hadouken_ball = false;
+
+	//Player position
+	int ryu_height = 0;
 
 	iPoint position;
 	PlayerState currentState = IDLE;

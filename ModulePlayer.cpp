@@ -53,6 +53,14 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	punch.frames.push_back({ 332, 268, 88, 94 });
 	punch.speed = 0.15f;
 
+	jump_punch.frames.push_back({ 17, 1778, 80, 150});
+	jump_punch.frames.push_back({ 106, 1778, 80, 150 });
+	jump_punch.frames.push_back({ 200, 1783, 80, 150 });
+	jump_punch.frames.push_back({ 292, 1783, 80, 150 });
+	jump_punch.frames.push_back({ 373, 1783, 80, 150 });
+	jump_punch.frames.push_back({ 452, 1778, 80, 150,});
+	jump_punch.speed = 0.15f;
+
 	hadouken.frames.push_back({ 27, 1545, 88, 89 });
 	hadouken.frames.push_back({ 124, 1545, 95, 89 });
 	hadouken.frames.push_back({ 239, 1545, 94, 89 });
@@ -63,7 +71,6 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	hadouken_effect.frames.push_back({ 480, 1563, 55, 31 });
 	hadouken_effect.frames.push_back({ 510, 1600, 55, 31 });
 	hadouken_effect.frames.push_back({ 550, 1563, 55, 31 });
-	//hadouken_effect.frames.push_back({ 510, 1600, 55, 31 });
 	hadouken_effect.speed = 0.2f;
 
 }
@@ -122,6 +129,10 @@ void ModulePlayer::UpdateFSM()
 		{
 			currentState = PUNCH;
 		}
+		else if (App->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+		{
+			currentState = JUMP_PUNCH;
+		}
 		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 		{
 			currentState = HADOUKEN;
@@ -163,6 +174,13 @@ void ModulePlayer::UpdateFSM()
 			currentState = IDLE;
 		}
 		break;
+	case JUMP_PUNCH:
+		if (jump_punch.IsLastFrame())
+		{
+			ryu_height = 0;
+			currentState = IDLE;
+		}
+		break;
 	case HADOUKEN:
 		if (hadouken.IsLastFrame())
 		{
@@ -196,6 +214,10 @@ void ModulePlayer::ExecuteState()
 	case PUNCH:
 		current_animation = &punch;
 		break;
+	case JUMP_PUNCH:
+		current_animation = &jump_punch;
+		ryu_height=50;
+		break;
 	case HADOUKEN:
 		current_animation = &hadouken;
 		break;
@@ -209,7 +231,7 @@ void ModulePlayer::ExecuteState()
 	}
 
 	assert(current_animation!=nullptr);
-	App->renderer->Blit(graphics, 60, 110, &current_animation->GetCurrentFrame(), 0);
+	App->renderer->Blit(graphics, 60, 110-ryu_height, &current_animation->GetCurrentFrame(), 0);
 }
 
 void ModulePlayer::ActivateHadouken()
