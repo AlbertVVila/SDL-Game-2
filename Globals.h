@@ -35,6 +35,7 @@ enum update_status
 	 }
 
 #define MAX(x,y) ((x>y)?x:y)
+#define MIN(x,y) ((x<y)?x:y)
 
 // Configuration -----------
 #define SCREEN_WIDTH 384
@@ -44,5 +45,6 @@ enum update_status
 #define VSYNC true
 #define TITLE "Super Awesome Game"
 #define PARALAX_SPEED 0.9f
+#define KEN_STAGE_LIMIT 750
 
 #endif //__GLOBALS_H__

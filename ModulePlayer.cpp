@@ -6,6 +6,8 @@
 #include "ModuleTextures.h"
 #include "SDL/include/SDL.h"
 #include <assert.h>
+
+#define RYU_SPEED 2
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
@@ -37,6 +39,13 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	forward.frames.push_back({ 341, 128, 72, 96 });
 	forward.frames.push_back({ 420, 128, 72, 95 });
 	forward.speed = 0.1f;
+
+	kick.frames.push_back({ 572, 267, 100, 95 });
+	kick.frames.push_back({ 669, 266, 99, 94 });
+	kick.frames.push_back({ 777, 265, 113, 94 });
+	kick.speed = 0.1f;
+
+
 }
 
 ModulePlayer::~ModulePlayer()
@@ -80,28 +89,32 @@ void ModulePlayer::UpdateFSM()
 	switch (currentState)
 	{
 	case IDLE:
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 			currentState = MOVING_BACKWARD;
-		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			currentState = MOVING_FORWARD;
 		break;
 	case MOVING_FORWARD:
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
-			currentState = MOVING_BACKWARD;
-		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_UP)
-			currentState = IDLE;
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_UP)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+				currentState = MOVING_BACKWARD;
+			else currentState = IDLE;
+		}
 		break;
 	case MOVING_BACKWARD:
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
-			currentState = MOVING_FORWARD;
-		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_UP)
-			currentState = IDLE;
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_UP)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+				currentState = MOVING_FORWARD;
+			else currentState = IDLE;
+		}
 		break;
 	}
-	RenderState();
+	ExecuteState();
 }
 
-void ModulePlayer::RenderState()
+void ModulePlayer::ExecuteState()
 {
 	Animation * current_animation = nullptr;
 	switch (currentState)
@@ -111,9 +124,11 @@ void ModulePlayer::RenderState()
 		break;
 	case MOVING_FORWARD:
 		current_animation = &forward;
+		App->renderer->camera.x = MAX(App->renderer->camera.x - RYU_SPEED, -KEN_STAGE_LIMIT);
 		break;
 	case MOVING_BACKWARD:
 		current_animation = &backward;
+		App->renderer->camera.x = MIN(App->renderer->camera.x + RYU_SPEED, 0);
 		break;
 	}
 	assert(current_animation!=nullptr);

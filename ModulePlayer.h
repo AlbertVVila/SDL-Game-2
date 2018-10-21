@@ -31,12 +31,14 @@ public:
 	Animation idle;
 	Animation backward;
 	Animation forward;
+	Animation kick;
+
 	iPoint position;
 	PlayerState currentState = IDLE;
 
 private:
 	void UpdateFSM();
-	void RenderState();
+	void ExecuteState();
 };
 
 #endif // __MODULEPLAYER_H__
