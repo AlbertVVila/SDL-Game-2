@@ -15,11 +15,11 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	position.y = 216;
 
 	// idle animation (arcade sprite sheet)
-	idle.frames.push_back({7, 14, 60, 90});
-	idle.frames.push_back({95, 15, 60, 89});
-	idle.frames.push_back({184, 14, 60, 90});
-	idle.frames.push_back({276, 11, 60, 93});
-	idle.frames.push_back({366, 12, 60, 92});
+	idle.frames.push_back({0, 14, 67, 90});
+	idle.frames.push_back({85, 15, 70, 89});
+	idle.frames.push_back({174, 14, 70, 90});
+	idle.frames.push_back({266, 11, 70, 93});
+	idle.frames.push_back({356, 12, 70, 92});
 	idle.speed = 0.1f;
 	
 	// walk backward animation (arcade sprite sheet)
@@ -40,11 +40,17 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	forward.frames.push_back({ 420, 128, 72, 95 });
 	forward.speed = 0.1f;
 
-	kick.frames.push_back({ 572, 267, 100, 95 });
-	kick.frames.push_back({ 669, 266, 99, 94 });
+	kick.frames.push_back({ 588, 267, 90, 95 });
+	kick.frames.push_back({ 678, 266, 98, 94 });
 	kick.frames.push_back({ 777, 265, 113, 94 });
-	kick.speed = 0.1f;
+	kick.frames.push_back({ 678, 266, 98, 94 });
+	kick.speed = 0.15f;
 
+	punch.frames.push_back({ 244, 268, 80, 94 });
+	punch.frames.push_back({ 332, 268, 88, 94 });
+	punch.frames.push_back({ 431, 268, 108, 94 });
+	punch.frames.push_back({ 332, 268, 88, 94 });
+	punch.speed = 0.15f;
 
 }
 
@@ -89,10 +95,22 @@ void ModulePlayer::UpdateFSM()
 	switch (currentState)
 	{
 	case IDLE:
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		{
+			currentState = KICK;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+		{
+			currentState = PUNCH;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
 			currentState = MOVING_BACKWARD;
+		}
 		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
 			currentState = MOVING_FORWARD;
+		}
 		break;
 	case MOVING_FORWARD:
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_UP)
@@ -108,6 +126,18 @@ void ModulePlayer::UpdateFSM()
 			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 				currentState = MOVING_FORWARD;
 			else currentState = IDLE;
+		}
+		break;
+	case KICK:
+		if (kick.IsLastFrame())
+		{
+			currentState = IDLE;
+		}
+		break;
+	case PUNCH:
+		if (punch.IsLastFrame())
+		{
+			currentState = IDLE;
 		}
 		break;
 	}
@@ -129,6 +159,12 @@ void ModulePlayer::ExecuteState()
 	case MOVING_BACKWARD:
 		current_animation = &backward;
 		App->renderer->camera.x = MIN(App->renderer->camera.x + RYU_SPEED, 0);
+		break;
+	case KICK:
+		current_animation = &kick;
+		break;
+	case PUNCH:
+		current_animation = &punch;
 		break;
 	}
 	assert(current_animation!=nullptr);
