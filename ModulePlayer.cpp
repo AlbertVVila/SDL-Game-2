@@ -9,6 +9,7 @@
 
 #define RYU_SPEED 2
 #define HADOUKEN_SPEED 5
+#define JUMP_HEIGHT 50
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
@@ -16,11 +17,11 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	position.y = 216;
 
 	// idle animation (arcade sprite sheet)
-	idle.frames.push_back({0, 14, 67, 90});
-	idle.frames.push_back({85, 15, 70, 89});
-	idle.frames.push_back({174, 14, 70, 90});
-	idle.frames.push_back({266, 11, 70, 93});
-	idle.frames.push_back({356, 12, 70, 92});
+	//idle.frames.push_back({0, 14, 67, 90});
+	idle.frames.push_back({85, 13, 70, 92});
+	idle.frames.push_back({174, 12, 70, 93});
+	idle.frames.push_back({268, 11, 70, 93});
+	idle.frames.push_back({356, 10, 70, 94});
 	idle.speed = 0.1f;
 	
 	// walk backward animation (arcade sprite sheet)
@@ -153,6 +154,22 @@ void ModulePlayer::UpdateFSM()
 				currentState = MOVING_BACKWARD;
 			else currentState = IDLE;
 		}
+		else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+		{
+			currentState = JUMP_PUNCH;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		{
+			currentState = KICK;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+		{
+			currentState = PUNCH;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+		{
+			currentState = HADOUKEN;
+		}
 		break;
 	case MOVING_BACKWARD:
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_UP)
@@ -160,6 +177,22 @@ void ModulePlayer::UpdateFSM()
 			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 				currentState = MOVING_FORWARD;
 			else currentState = IDLE;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+		{
+			currentState = JUMP_PUNCH;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		{
+			currentState = KICK;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+		{
+			currentState = PUNCH;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+		{
+			currentState = HADOUKEN;
 		}
 		break;
 	case KICK:
@@ -216,7 +249,15 @@ void ModulePlayer::ExecuteState()
 		break;
 	case JUMP_PUNCH:
 		current_animation = &jump_punch;
-		ryu_height=50;
+		ryu_height=JUMP_HEIGHT;
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			App->renderer->camera.x = MAX(App->renderer->camera.x - RYU_SPEED, -STAGE_LIMIT);
+		}
+		else if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			App->renderer->camera.x = MIN(App->renderer->camera.x + RYU_SPEED, 0);
+		}
 		break;
 	case HADOUKEN:
 		current_animation = &hadouken;
